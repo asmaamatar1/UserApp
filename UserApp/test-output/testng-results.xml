@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="2" passed="2">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="157044" started-at="2018-05-14T14:55:59Z" finished-at="2018-05-14T14:58:36Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="157044" started-at="2018-05-14T14:55:59Z" finished-at="2018-05-14T14:58:36Z">
+      <class name="InstaSalla.TestCases.AddOrder">
+        <test-method status="PASS" signature="setup()[pri:0, instance:InstaSalla.TestCases.AddOrder@4e9ba398]" name="setup" is-config="true" duration-ms="42035" started-at="2018-05-14T14:55:59Z" finished-at="2018-05-14T14:56:41Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="addOrder()[pri:0, instance:InstaSalla.TestCases.AddOrder@4e9ba398]" name="addOrder" duration-ms="49828" started-at="2018-05-14T14:56:41Z" description="All add order steps" finished-at="2018-05-14T14:57:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addOrder -->
+        <test-method status="PASS" signature="addOrder()[pri:0, instance:InstaSalla.TestCases.AddOrder@4e9ba398]" name="addOrder" duration-ms="51241" started-at="2018-05-14T14:57:30Z" description="All add order steps" finished-at="2018-05-14T14:58:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addOrder -->
+        <test-method status="PASS" signature="logout()[pri:0, instance:InstaSalla.TestCases.AddOrder@4e9ba398]" name="logout" is-config="true" duration-ms="9981" started-at="2018-05-14T14:58:22Z" description="Logout" finished-at="2018-05-14T14:58:32Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- logout -->
+        <test-method status="PASS" signature="takeScreenshots()[pri:0, instance:InstaSalla.TestCases.AddOrder@4e9ba398]" name="takeScreenshots" is-config="true" duration-ms="3928" started-at="2018-05-14T14:58:32Z" description="Takes screenshot for each action performed" finished-at="2018-05-14T14:58:36Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- takeScreenshots -->
+      </class> <!-- InstaSalla.TestCases.AddOrder -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

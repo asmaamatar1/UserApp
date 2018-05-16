@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="suite 1" verbose="1" >
+  <test name="User App suite 1" >
+    <classes>
+      <class name="InstaSalla.UserApp.AddOrder"/>
+      <class name="InstaSalla.UserApp.EditProfile"/>
+      <class name="InstaSalla.UserApp.OrderHistory"/>
+    </classes>
+ </test>
+</suite>

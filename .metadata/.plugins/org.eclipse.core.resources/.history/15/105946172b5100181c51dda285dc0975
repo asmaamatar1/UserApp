@@ -1,0 +1,81 @@
+package InstaSalla.UserApp;
+import org.testng.annotations.Test;
+import org.testng.annotations.Test;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import org.testng.annotations.*;
+import java.util.List;
+
+public class TestApp {
+	
+	public static AppiumDriver<MobileElement> driver;
+	
+	@BeforeTest
+	public void launch() {
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("deviceName", "My Phone");
+		caps.setCapability("udid", "3801b11b65887300"); //Give Device ID of your mobile phone
+		caps.setCapability("platformName", "Android");
+		caps.setCapability("platformVersion", "4.4.4");
+		caps.setCapability("autoGrantPermissions","true");
+		caps.setCapability("appPackage", "com.instasalla.app");
+		caps.setCapability("appActivity", "com.instasalla.app.splash.SplashActivity");
+		caps.setCapability("noReset", "true");
+		
+		//Instantiate Appium Driver
+		try {
+				driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+				
+			
+		} catch (MalformedURLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+		@Test (priority = 1)
+		public void login()
+		{
+			/**
+			 ** Define Screen WebElements 
+			 **/
+			WebElement login_btn = driver.findElement(By.id("tv_login"));
+			login_btn.click();
+			List<MobileElement> elements = driver.findElements(By.id("et_custom_edittext"));
+			System.out.println("Size"+elements.size());
+			
+				
+				elements.get(0).sendKeys("99887755");
+				elements.get(1).sendKeys("123456");
+			}
+			
+			/*for (int i=0; i<elements.size();i++)
+			{
+				elements.get(i).sendKeys("99887755");
+				elements.get(i+1).sendKeys("123456");
+			}*/
+				
+			
+			
+			System.out.println("After"); 
+			
+			/**
+			 ** Execute Actions
+			 * **/
+			
+			
+			// mobile.sendKeys("99887755");
+			//password.sendKeys("123456");
+			
+			
+		}
+		
+
+	
+	
+}

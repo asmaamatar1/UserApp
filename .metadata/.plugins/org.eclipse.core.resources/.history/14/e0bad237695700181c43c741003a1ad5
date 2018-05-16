@@ -1,0 +1,155 @@
+package InstaSalla.UserApp;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.FindsByAndroidUIAutomator;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
+public class OrderHistory {
+public static AppiumDriver<MobileElement> driver;
+	
+Setup launch = new Setup();
+Login login = new Login();
+ChooseStore store = new ChooseStore();
+
+@BeforeClass
+public void setup() {
+	launch.launch();
+	login.login();
+	store.selectAddress();
+	store.filter();
+	store.chooseStore();
+}
+	 @Test (priority = 4 , description = "View Order History",dependsOnMethods ="chooseStore")
+		public void orderHistory() {
+			
+		 	//Click on "Me"
+		 	List<MobileElement> navigationContainer = driver.findElements(By.id("bottom_navigation_container"));
+			navigationContainer.get(3).click(); 
+			
+			//Click on Order History
+			WebElement orderHistory= driver.findElement(By.id("order_history_view"));
+			orderHistory.click();
+			
+			
+		}
+	 
+	 @Test (priority =5, description = "Track order for a random order",dependsOnMethods="orderHistory")
+	 public void trackOrder() {
+		
+		 List<MobileElement> orders = driver.findElements(By.id("order_number"));
+		 orders.get(0).click();
+		 
+		 WebElement trackOrder = driver.findElement(By.id("tracking_order_button"));
+		 trackOrder.click();
+		 
+		 driver.navigate().back(); 
+	 }
+	 
+	 @Test (priority=6, description="Click Reoreder for the first order in the list",dependsOnMethods="trackOrder")
+	 public void reorder() {
+		 WebElement reorder = driver.findElement(By.id("reorder_button"));
+		 reorder.click();
+	 }
+	 
+	 @Test(priority = 7, description="Confirm Order",dependsOnMethods="reorder")
+	 public void confirmOrder() {
+		 WebElement confirm = driver.findElement(By.id("confirm_order_btn"));
+		 confirm.click();
+		 
+	 }
+	 @Test (priority = 8, description = "Change Delivery time",dependsOnMethods="confirmOrder")
+		public void changeTime() {
+			
+			//Open delivery times ddl
+			WebElement delivertTime = driver.findElement(By.id("choose_delivery_time"));
+			delivertTime.click();
+			
+			//Select from the opened times ddl
+			List<MobileElement> times = driver.findElements(By.id("text1"));
+			times.get(1).click();
+			
+			//Clicking "OK" to confirm the selected option.
+			WebElement OK = driver.findElement(By.id("button1"));
+			OK.click();
+		}
+		
+		
+		@Test (priority = 9, description = "Scroll down till KNET then choose it and fill in copoun textbox",dependsOnMethods="changeTime")
+		public void choosePaymentMethod() {
+				//Scroll until "KNET" is visible then click it
+			 String uiSelector = "new UiSelector().textMatches(\"KNET\")";
+			 String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("+ uiSelector + ");";
+			 ((FindsByAndroidUIAutomator<MobileElement>) driver).findElementByAndroidUIAutomator(command).click();
+			 
+			 //Type a copoun code
+			 WebElement copoun = driver.findElement(By.id("promo_code_et"));
+			 copoun.sendKeys("100100");
+			 
+			 //Click on Apply copoun
+			 WebElement apply_btn = driver.findElement(By.id("promo_code_btn"));
+			 apply_btn.click();	  
+			 
+			 //Press OKAY in the dialogue box appears after pressing "Apply Copoun"
+			 
+			 WebElement OKAY = driver.findElement(By.id("button1"));
+			 OKAY.click();
+			 
+		}
+		
+		@Test (priority = 10, description = "Press on Checkout button",dependsOnMethods="choosePaymentMethod")
+		public void checkout() {
+		  WebElement checkout = driver.findElement(By.id("confirm_order_btn"));
+		  checkout.click();
+		  
+		  //Press done on the order page
+		 // WebElement done = driver.findElement(By.id(""));
+		  //done.click();
+		}
+		
+	
+
+	@AfterTest (description = "Takes screenshot for each action performed")
+	public void takeScreenshots() throws IOException {
+		File srcFile = driver.getScreenshotAs(OutputType.FILE);
+	    String filename = UUID.randomUUID().toString();
+	    File targetFile = new File(System.getProperty("user.dir") + "/order_screenshots/" + filename + ".jpg");
+	    try {
+	        FileUtils.copyFile(srcFile, targetFile);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+        
+		
+	}
+		
+	@AfterClass (description = "Logout")
+	public void logout()
+	{
+		List<MobileElement> navigationContainer = driver.findElements(By.id("bottom_navigation_container"));
+		navigationContainer.get(3).click(); //Click on "Me"
+		WebElement logout = driver.findElement(By.id("logout_btn"));
+		logout.click();
+		
+	}
+		
+		
+}

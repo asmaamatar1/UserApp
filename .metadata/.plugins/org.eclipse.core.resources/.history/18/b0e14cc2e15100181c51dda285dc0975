@@ -1,0 +1,122 @@
+package InstaSalla.UserApp;
+import org.testng.annotations.Test;
+import org.testng.annotations.Test;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import org.testng.annotations.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class TestApp {
+	
+	public static AppiumDriver<MobileElement> driver;
+	
+	@BeforeClass
+	public void launch() {
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("deviceName", "My Phone");
+		caps.setCapability("udid", "86MDU16329009973"); //Give Device ID of your mobile phone
+		caps.setCapability("platformName", "Android");
+		caps.setCapability("platformVersion", "5.1.1");
+		caps.setCapability("autoGrantPermissions","true");
+		caps.setCapability("appPackage", "com.instasalla.app");
+		caps.setCapability("appActivity", "com.instasalla.app.splash.SplashActivity");
+		caps.setCapability("noReset", "true");
+		
+		//Instantiate Appium Driver
+		try {
+				driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+				
+			
+		} catch (MalformedURLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+	}
+		
+	@Test (priority = 1)
+		public void login()
+		{
+			/**
+			 ** Define Screen WebElements 
+			 **/
+			WebElement login_btn = driver.findElement(By.id("tv_login"));
+			login_btn.click();
+			List<MobileElement> elements = driver.findElements(By.id("et_custom_edittext"));
+			System.out.println("Size"+elements.size());		
+				elements.get(0).sendKeys("99887755");
+				elements.get(1).sendKeys("123456");
+			WebElement login = driver.findElement(By.id("btn_login"));
+			login.click();
+			
+		}
+		
+		@Test (priority=2)
+		public void selectAddress() {
+		List <MobileElement> addresses =driver.findElements(By.id("address_name")); // Will retrieve list of addresses as they're all have the same resource id
+		System.out.println("Addresses List Size"+addresses.size());
+		addresses.get(0).click(); //This should click on Jahra as it is the first address in this user account (99887755,123456)	
+		
+		}
+		
+		@Test (priority =3)
+		public void filter(){
+		
+			WebElement filter = driver.findElement(By.id("filter_btn"));
+			filter.click();
+			
+			
+			//Select Hybermarkes&Coop
+			List<MobileElement> filter_options = driver.findElements(By.id("filter_name"));
+			System.out.println("Filter List Size"+filter_options.size());
+			filter_options.get(0).click();
+	
+		}
+		
+		@Test (priority=4)
+		public void chooseStore() {
+
+			//Select Nasiem Store
+			List<MobileElement> stores = driver.findElements(By.id("store_name"));
+			stores.get(0).click();
+			
+		}
+	
+		@Test(priority = 5)
+		public void addItems() {
+			
+			WebElement seeAll = driver.findElement(By.id("see_all_best_offers"));
+			seeAll.click();
+			List<MobileElement> addToCart = driver.findElements(By.id("item_menu_add_to_cart_view"));
+			addToCart.get(0).click();
+			
+		}
+		
+		@Test(priority = 6)
+		public void viewCart() {
+		
+		}
+		/*@AfterClass
+		public void quit()
+		{
+			driver.quit();
+		}
+			*/
+			
+				
+	
+	
+}

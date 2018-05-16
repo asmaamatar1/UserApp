@@ -1,0 +1,125 @@
+package InstaSalla.UserApp;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
+public class EditProfile {
+	public static AppiumDriver<MobileElement> driver;
+	
+	@BeforeClass (description = "Setup desire capabilities and login")
+	public void setUp() {
+		DesiredCapabilities caps = new DesiredCapabilities();
+		caps.setCapability("deviceName", "My Phone");
+		caps.setCapability("udid", "86MDU16329009973"); //Give Device ID of your mobile phone
+		caps.setCapability("platformName", "Android");
+		caps.setCapability("platformVersion", "5.1.1");
+		caps.setCapability("autoGrantPermissions","true");
+		caps.setCapability("appPackage", "com.instasalla.app");
+		caps.setCapability("appActivity", "com.instasalla.app.splash.SplashActivity");
+		caps.setCapability("noReset", "true");
+		
+		//Instantiate Appium Driver
+		try {
+				driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+				
+			
+		} catch (MalformedURLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+	}
+	
+	@Test (priority = 1, description = "Login to the app")
+	public void login()
+	{
+		//Define screen fields 
+	
+		WebElement login_btn = driver.findElement(By.id("tv_login"));
+		login_btn.click();
+		
+		//Get Mobile Number and password fields in list as they've the same id
+		List<MobileElement> elements = driver.findElements(By.id("et_custom_edittext"));		
+			elements.get(0).sendKeys("99887755");
+			elements.get(1).sendKeys("123456");
+			
+		//Clicking Login button after filling the fields	
+		WebElement login = driver.findElement(By.id("btn_login"));
+		login.click();
+		
+	}
+		
+	@Test (priority=2, description = "Select Address")
+		public void selectAddress() {
+		
+		// Getting List of addresses then, click one of them
+		List <MobileElement> addresses =driver.findElements(By.id("address_name")); // Will retrieve list of addresses as they're all have the same resource id
+		addresses.get(0).click(); //This should click on Jahra as it is the first and allowed address in this user account (99887755,123456)	
+		}
+	
+	@Test (priority=3, description ="Select Store")
+	public void chooseStore() {
+		//Select Nasiem Store
+		List<MobileElement> stores = driver.findElements(By.id("store_name"));
+		stores.get(0).click();	
+	}
+	
+	
+	@Test(priority=4, description="Edit Profile")
+	public void editProfile() {
+		WebElement editProfile = driver.findElement(By.id("edit_account_view"));
+		editProfile.click();
+		
+		
+		List<MobileElement> profile_fields = driver.findElements(By.id("et_custom_edittext"));
+		profile_fields.get(0).sendKeys("Full Name Update");
+		profile_fields.get(2).sendKeys("99885566");
+		driver.hideKeyboard();
+	}
+
+ 	@AfterTest (description = "Takes screenshot for each action performed")
+	public void takeScreenshots() throws IOException {
+		File srcFile = driver.getScreenshotAs(OutputType.FILE);
+	    String filename = UUID.randomUUID().toString();
+	    File targetFile = new File(System.getProperty("user.dir") + "/track_screenshots/" + filename + ".jpg");
+	    try {
+	        FileUtils.copyFile(srcFile, targetFile);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+     
+		
+	}
+
+
+ 	@AfterClass (description = "Logout")
+	public void logout()
+	{
+ 		List<MobileElement> navigationContainer = driver.findElements(By.id("bottom_navigation_container"));
+		navigationContainer.get(3).click(); //Click on "Me"
+		WebElement logout = driver.findElement(By.id("logout_btn"));
+		logout.click();
+		
+	}
+	
+}

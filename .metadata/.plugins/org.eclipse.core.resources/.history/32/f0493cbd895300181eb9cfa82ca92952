@@ -1,0 +1,211 @@
+package InstaSalla.UserApp;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.annotations.Test;
+
+import org.apache.commons.io.FileUtils;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.FindsByAndroidUIAutomator;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import org.testng.annotations.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+public class AddOrder extends SetUp{
+	
+	public static AppiumDriver<MobileElement> driver;
+	public  SetUp setup = new SetUp();
+	public  Login login = new Login();
+	
+		
+	@BeforeClass
+	public void setup() {
+		setup.launch();
+	}
+	
+	@Test (priority = 1, description = "Login to the app")
+	public void login()
+	{
+		//Define screen fields 
+	
+		WebElement login_btn = driver.findElement(By.id("tv_login"));
+		login_btn.click();
+		
+		//Get Mobile Number and password fields in list as they've the same id
+		List<MobileElement> elements = driver.findElements(By.id("et_custom_edittext"));		
+			elements.get(0).sendKeys("99887755");
+			elements.get(1).sendKeys("123456");
+			
+		//Clicking Login button after filling the fields	
+		WebElement login = driver.findElement(By.id("btn_login"));
+		login.click();
+		
+	}
+	
+	@Test (priority=2, description = "Select Address")
+		public void selectAddress() {
+		
+		// Getting List of addresses then, click one of them
+		List <MobileElement> addresses =driver.findElements(By.id("address_name")); // Will retrieve list of addresses as they're all have the same resource id
+		addresses.get(0).click(); //This should click on Jahra as it is the first and allowed address in this user account (99887755,123456)	
+		}
+		
+		@Test (priority =3, description ="Click Filter then choose one of the options")
+		public void filter(){
+		
+			//Click on Filter button
+			WebElement filter = driver.findElement(By.id("filter_btn"));
+			filter.click();
+			
+			//Getting the options in list.Then, click the first one (Select Hybermarkes&Coop)
+			List<MobileElement> filter_options = driver.findElements(By.id("filter_name"));
+			System.out.println("Filter List Size"+filter_options.size());
+			filter_options.get(0).click();
+		}
+		
+		@Test (priority=4, description ="Select Store")
+		public void chooseStore() {
+			//Select Nasiem Store
+			List<MobileElement> stores = driver.findElements(By.id("store_name"));
+			stores.get(0).click();	
+		}
+	
+		@Test(priority = 5, description ="Add items to Cart")
+		public void addItems() {
+			//Pressing See All Link in best offer section
+			WebElement seeAll = driver.findElement(By.id("see_all_best_offers"));
+			seeAll.click();
+			
+			//Getting list of all the visible items as all "Add to Cart" buttons have the same ID
+			List<MobileElement> addToCart = driver.findElements(By.id("item_menu_add_to_cart_view"));
+			//Looping in the first two visible items to avoid scrolling
+			for (int i= 0 ; i < 2; i++) { 
+				addToCart.get(i).click();
+			}
+				List<MobileElement> plus_btn = driver.findElements(By.id("product_detail_add_btn"));
+				List<MobileElement> minus_btn = driver.findElements(By.id("product_detail_subtract_btn"));
+				
+				//Adding 3 quantities for each item then decrementing 1
+				for(int i=0; i<2; i++) {
+					for (int z=0; z<2; z++) 
+							plus_btn.get(i).click(); 
+					minus_btn.get(i).click();
+				}
+		}
+		
+		@Test(priority = 6, description ="View Cart to confirm Order")
+		public void viewCart() {
+			//Clicking Cart Icon to view selected items
+			WebElement cart = driver.findElement(By.id("cart_icon"));
+			cart.click();
+		}
+		
+		@Test (priority = 7, description ="Confirm Order" )
+		public void confirmOrder() {
+			//Confirming order after viewing selected items in the cart
+			WebElement confirmOrder = driver.findElement(By.id("confirm_order_btn"));
+			confirmOrder.click();
+		}
+		
+		@Test (priority = 8, description = "Change Delivery time")
+		public void changeTime() {
+			
+			//Open delivery times ddl
+			WebElement delivertTime = driver.findElement(By.id("choose_delivery_time"));
+			delivertTime.click();
+			
+			//Select from the opened times ddl
+			List<MobileElement> times = driver.findElements(By.id("text1"));
+			times.get(1).click();
+			
+			//Clicking "OK" to confirm the selected option.
+			WebElement OK = driver.findElement(By.id("button1"));
+			OK.click();
+		}
+		
+		
+		@Test (priority = 9, description = "Scroll down till KNET then choose it and fill in copoun textbox")
+		public void choosePaymentMethod() {
+				//Scroll until "KNET" is visible then click it
+			 String uiSelector = "new UiSelector().textMatches(\"KNET\")";
+			 String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("+ uiSelector + ");";
+			 ((FindsByAndroidUIAutomator<MobileElement>) driver).findElementByAndroidUIAutomator(command).click();
+			 
+			 //Type a copoun code
+			 WebElement copoun = driver.findElement(By.id("promo_code_et"));
+			 copoun.sendKeys("100100");
+			 
+			 //Click on Apply copoun
+			 WebElement apply_btn = driver.findElement(By.id("promo_code_btn"));
+			 apply_btn.click();	  
+			 
+			 //Press OKAY in the dialogue box appears after pressing "Apply Copoun"
+			 
+			 WebElement OKAY = driver.findElement(By.id("button1"));
+			 OKAY.click();
+			 
+		}
+		
+		@Test (priority = 10, description = "Press on Checkout button")
+		public void checkout() {
+		  WebElement checkout = driver.findElement(By.id("confirm_order_btn"));
+		  checkout.click();
+		  
+		  //Press done on the order page
+		 // WebElement done = driver.findElement(By.id(""));
+		  //done.click();
+		}
+		
+		
+		@AfterTest (description = "Takes screenshot for each action performed")
+		public void screenshot() throws IOException{
+			File srcFile = driver.getScreenshotAs(OutputType.FILE);
+		    String filename = UUID.randomUUID().toString();
+		    File targetFile = new File(System.getProperty("user.dir") + "/screenshots/" + filename + ".jpg");
+		    try {
+		        FileUtils.copyFile(srcFile, targetFile);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	        
+		}
+		
+		/*@AfterClass (description = "Logout")
+		public void quit()
+		{
+			WebElement Me = driver.findElement(By.id(""));
+			WebElement logout = driver.findElement(By.id(""));
+			logout.click();
+			
+		}*/
+			
+			
+				
+	
+	
+}

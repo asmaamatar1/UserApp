@@ -1,0 +1,32 @@
+package InstaSalla.UserApp;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
+public class BrowseMenu extends AddOrder{
+	public static AppiumDriver<MobileElement> driver;
+	AddOrder obj = new AddOrder();
+	
+	@BeforeClass (description = "Setup desire capabilities and login")
+	public void setUP() {
+		obj.launch();
+		obj.login();
+	}
+	@Test
+	public void 
+	}
+	
+	
+}

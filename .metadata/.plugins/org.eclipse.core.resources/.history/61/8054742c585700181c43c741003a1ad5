@@ -1,0 +1,6 @@
+package InstaSalla.UserApp;
+
+public class Login extends Setup {
+	
+
+}
